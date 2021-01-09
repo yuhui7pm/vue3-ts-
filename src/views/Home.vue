@@ -1,0 +1,40 @@
+<template>
+  <div class="home-page container-md">
+    <section class="py-5 text-center container">
+      <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+          <img src="../assets/callout.svg" alt="callout" class="w-50" />
+          <h2 class="font-weight-light">随心写作，自由表达</h2>
+          <p>
+            <router-link to="/create" class="btn btn-primary my-2">开始写文章</router-link>
+          </p>
+        </div>
+      </div>
+    </section>
+    <column-list :list="list" />
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, computed } from "vue";
+import ColumnList from "../components/ColumnList.vue";
+import { GlobalDataProps } from "../store/types";
+import { useStore } from "vuex";
+
+export default defineComponent({
+  name: "Home",
+  components: {
+    ColumnList
+  },
+  setup() {
+    const store = useStore<GlobalDataProps>();
+    const list = computed(() => {
+      return store.state.columns;
+    });
+
+    return {
+      list
+    };
+  }
+});
+</script>
