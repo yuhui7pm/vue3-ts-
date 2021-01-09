@@ -55,3 +55,5 @@ export interface PostProps {
   createdAt?: string;
   isHTML?: boolean;
 }
+
+export type MessageType = 'success' | 'error' | 'default'
