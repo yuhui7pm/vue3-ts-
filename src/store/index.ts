@@ -1,6 +1,19 @@
-import { createStore } from "vuex";
+import { createStore, Commit } from "vuex";
 import  {testColumns, testPosts } from './testData';
-import { GlobalDataProps } from './types'
+import { GlobalDataProps, GlobalErrorProps } from './types'
+import { axios, AxiosRequestConfig } from '../libs/http'
+
+const asyncAndCommit = async (url: string, mutationName: string, commit: Commit, 
+    config: AxiosRequestConfig = {method: 'get'}, extraData?: any) => {
+    const { data } = await axios(url, config)
+
+    if (extraData) {
+        commit(mutationName, { data, extraData })
+    } else {
+        commit(mutationName, data)
+    }
+    return data
+}
 
 const store = createStore<GlobalDataProps>({
     state: {
@@ -9,8 +22,12 @@ const store = createStore<GlobalDataProps>({
         user: {
             isLogin: false,
             nickName: '啦啦啦'
-        }
+        },
+        loading: false,
+        error: {status: false},
+        token: '',
     },
+
     getters: {
         getColumns: (state) => {
             return state.columns;
@@ -29,6 +46,20 @@ const store = createStore<GlobalDataProps>({
     mutations: {
         setUserLoginStatus: (state, rawData) => {
             state.user = Object.assign({}, state.user ,rawData);
+        },
+
+        setLoading (state, status) {
+            state.loading = status;
+        },
+
+        setErrors (state, error: GlobalErrorProps) {
+            state.error = error;
+        },
+    },
+
+    actions: {
+        fetchCurrentUser ({ commit }) {
+            return asyncAndCommit('/api/user/current', 'fetchCurrentUser', commit);
         }
     }
 })

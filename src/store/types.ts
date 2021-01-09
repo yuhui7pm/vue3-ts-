@@ -41,7 +41,10 @@ interface ListProps<p> {
 export interface GlobalDataProps {
   columns: ColumnProps[];
   posts: PostProps[];
-  user: UserProps
+  user: UserProps,
+  loading: boolean,
+  error: GlobalErrorProps,
+  token: ''
 }
 
 export interface PostProps {
@@ -54,6 +57,12 @@ export interface PostProps {
   author?: string | UserProps;
   createdAt?: string;
   isHTML?: boolean;
+}
+
+// 接口返回的报错信息
+export interface GlobalErrorProps {
+  status: boolean;
+  message?: string;
 }
 
 export type MessageType = 'success' | 'error' | 'default'
