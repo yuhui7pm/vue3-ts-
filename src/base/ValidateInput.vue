@@ -1,7 +1,14 @@
 <template>
-  <div class="validate-input-container pb-3">
-    <input type="text" v-model="inputRef.value" @blur="validateInput" v-bind="$attrs" />
-    <p v-if="inputRef.error" class="invalid-feedback" style="display: block;">{{inputRef.message}}</p>
+  <div class="validate-input-container">
+    <input
+      type="text"
+      class="form-control"
+      :class="{ 'is-invalid': inputRef.error }"
+      v-model="inputRef.value"
+      @blur="validateInput"
+      v-bind="$attrs"
+    />
+    <p v-if="inputRef.error" class="invalid-feedback">{{inputRef.message}}</p>
   </div>
 </template>
 
@@ -12,7 +19,7 @@ import { emitter } from "./ValidateForm.vue";
 const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 export interface RulesProps {
-  type: "required" | "email" | "password";
+  type: "required" | "email" | "password" | "custom";
   message: string;
   validator?: () => boolean;
 }
@@ -53,6 +60,8 @@ export default defineComponent({
           case "password":
             isPass = inputRef.value.trim().length > 8;
             break;
+          case "custom":
+            isPass = rule.validator ? rule.validator() : true;
           default:
             break;
         }

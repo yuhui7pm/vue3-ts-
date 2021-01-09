@@ -44,7 +44,7 @@ export interface GlobalDataProps {
   user: UserProps,
   loading: boolean,
   error: GlobalErrorProps,
-  token: ''
+  token: string
 }
 
 export interface PostProps {
@@ -66,3 +66,13 @@ export interface GlobalErrorProps {
 }
 
 export type MessageType = 'success' | 'error' | 'default'
+
+export interface LoginInfoProps {
+  hasLogin: boolean;
+  nickName?: string;
+  id?: number;
+}
+
+export interface tokenType {
+  token: string
+}

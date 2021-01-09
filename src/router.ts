@@ -4,6 +4,7 @@ import ColumnDetail from './views/ColumnDetail.vue';
 import Login from './views/Login.vue';
 import store from './store';
 import { axios } from './libs/http'
+import Signup from './views/Signup.vue';
 
 const historyRouter = createWebHistory();
 const router = createRouter({
@@ -23,7 +24,12 @@ const router = createRouter({
         meta: {
             redirectAlreadyLogin: true  // 路由元信息，帮助路由拦截
         }
-    }]
+    }, {
+      path: '/signup',
+      name: 'signup',
+      component: Signup,
+      meta: { redirectAlreadyLogin: true }
+    },]
 });
 
 // 路由前置守卫

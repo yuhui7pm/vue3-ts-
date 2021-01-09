@@ -1,4 +1,4 @@
-import { ColumnProps, PostProps } from './types';
+import { ColumnProps, PostProps, tokenType, UserProps } from './types';
 
 export const testColumns: ColumnProps[] = [
   {
@@ -52,3 +52,16 @@ export const testPosts: PostProps[] = [
     column: '1'
   }
 ]
+
+
+export const mockToken: tokenType = {
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjVmZjlhMGE3OWM3YWIxMjYzYmFiYTQ2NyIsImVtYWlsIjoiMTZoeXVAc3R1Mi5lZHUuY24iLCJwYXNzd29yZCI6IiQyYSQxMCRpbFl5TW5xRE80aXovdzBTWDNxUmFlbHR4ZWRxUS85VkdJU1p2UDhNRzE5eDRoZXhRS1EzLiIsIm5pY2tOYW1lIjoiMTZoeXVAc3R1Mi5lZHUuY24iLCJyb2xlIjp7Il9pZCI6IjVlNjA2OThiZGI2MGY2NGI1N2UzNjEzMyIsIm5hbWUiOiJub3JtYWxVc2VyIiwiX192IjowLCJjcmVhdGVkQXQiOiIyMDIwLTAzLTA1VDAyOjUyOjU5LjgwOFoiLCJhY2Nlc3MiOiJ1c2VyIn0sIl9fdiI6MCwiY29sdW1uIjoiNWZmOWEwYTc5YzdhYjEyNjNiYWJhNDY4IiwiY3JlYXRlZEF0IjoiMjAyMS0wMS0wOVQxMjoyNToxMS4xOTdaIn0sImV4cCI6MTYxMDgwNDE2NSwiaWF0IjoxNjEwMTk5MzY1fQ.rGLfRf__rj8KAqSjjOzzAoexOnAzSsDIEUIRi_MOX5k"
+}
+
+export const mockLoginData: UserProps = {
+    column: "5ff9a0a79c7ab1263baba468",
+    email: "16hyu@stu2.edu.cn",
+    nickName: "大帅逼",
+    _id: "5ff9a0a79c7ab1263baba467",
+    isLogin: true
+}

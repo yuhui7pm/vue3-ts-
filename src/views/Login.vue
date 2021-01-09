@@ -1,5 +1,6 @@
 <template>
   <div class="login-page mx-auto p-3 w-330">
+    <h5 class="my-4 text-center">登录界面</h5>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">邮箱地址</label>
@@ -13,6 +14,9 @@
           :rules="passwordRules"
           v-model="passwordVal"
         ></validate-input>
+        <div class="form-text">
+          <a href="/signup">还没有账户？去注册一个新的吧！</a>
+        </div>
       </div>
       <template v-slot:submit>
         <button type="submit" class="btn btn-primary btn-block btn-large w-100">登录</button>
@@ -20,12 +24,25 @@
     </validate-form>
   </div>
 </template>
+
+
+<style scoped>
+.w-330 {
+  max-width: 330px;
+}
+.login-page .mb-3 {
+  text-align: left;
+}
+</style>
+
+
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import ValidateInput, { RulesProps } from "../base/ValidateInput.vue";
 import ValidateForm from "../base/ValidateForm.vue";
+import createMessage from "../base/createMsg";
 
 export default defineComponent({
   name: "Login",
@@ -48,11 +65,27 @@ export default defineComponent({
 
     const onFormSubmit = (ans: boolean) => {
       if (ans) {
-        store.commit("setUserLoginStatus", {
-          isLogin: true
-        });
+        const loginInfo = {
+          email: emailVal.value,
+          password: passwordVal.value
+        };
 
-        router.push("/");
+        // 登录并且获取用户信息
+        store
+          .dispatch("loginAndFetch", loginInfo)
+          .then(() => {
+            createMessage("登陆成功，2秒后跳转首页", "success");
+            setTimeout(() => {
+              router.push("/");
+            }, 2000);
+          })
+          .catch(e => {
+            console.log(e);
+          });
+
+        // store.commit("setUserLoginStatus", {
+        //   isLogin: true
+        // });
       }
     };
 

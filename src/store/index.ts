@@ -1,7 +1,9 @@
 import { createStore, Commit } from "vuex";
-import  {testColumns, testPosts } from './testData';
+import  {testColumns, testPosts, mockToken, mockLoginData } from './testData';
 import { GlobalDataProps, GlobalErrorProps } from './types'
 import { axios, AxiosRequestConfig } from '../libs/http'
+import { StorageHandler, storageType } from '../libs/storage'
+const storageHandler = new StorageHandler();
 
 const asyncAndCommit = async (url: string, mutationName: string, commit: Commit, 
     config: AxiosRequestConfig = {method: 'get'}, extraData?: any) => {
@@ -25,7 +27,7 @@ const store = createStore<GlobalDataProps>({
         },
         loading: false,
         error: {status: false},
-        token: '',
+        token: storageHandler.getItem(storageType, 'token') || '',
     },
 
     getters: {
@@ -55,11 +57,47 @@ const store = createStore<GlobalDataProps>({
         setErrors (state, error: GlobalErrorProps) {
             state.error = error;
         },
+
+        // 保存登录之后的token和请求头信息
+        login (state, loginData) {
+            const { token } = loginData.data || mockToken;
+            state.token = token;
+            storageHandler.setItem(storageType, 'token', token);
+            axios.defaults.headers.common.Authorization = `Bearer ${token}`
+        },
+
+        logout (state) {
+            state.token = '';
+            state.user = { isLogin: false };
+            storageHandler.remove(storageType, 'token'); // 如果退出登录就把保存的token清除
+            delete axios.defaults.headers.common.Authorization;
+        },
+
+        fetchCurrentUser (state, rawData) {
+            state.user = { isLogin: true, ...(rawData.data || mockLoginData) }
+        },
     },
 
     actions: {
+
+        // 登陆之后获取用户登录信息
         fetchCurrentUser ({ commit }) {
             return asyncAndCommit('/api/user/current', 'fetchCurrentUser', commit);
+        },
+
+        register ({commit}, registerInfo) {
+            return asyncAndCommit('/api/users', 'register', commit,  { method: 'post', data: registerInfo })
+        },
+
+        loginAndFetch (params, loginParam) {
+            console.log(params);
+            return params.dispatch('login', loginParam).then(() => {
+                params.dispatch('fetchCurrentUser')
+            })
+        },
+
+        login ({ commit }, loginParam) {
+            return asyncAndCommit('/api/user/login', 'login', commit, { method: 'post', data: loginParam });
         }
     }
 })

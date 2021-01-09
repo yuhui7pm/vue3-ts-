@@ -1,7 +1,14 @@
 import axios, {AxiosRequestConfig} from 'axios';
 import store from '../store';
 
+
+axios.defaults.baseURL = 'http://apis.imooc.com/';
+
 axios.interceptors.request.use(config => {
+    config.params = {
+        ...config.params,
+        icode: 'CA6C4086133360B'
+    };
     store.commit('setLoading', true);
     store.commit('setError', { status: false, message: '' })
     return config;

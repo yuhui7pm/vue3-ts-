@@ -19,7 +19,8 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
 import "bootstrap/dist/css/bootstrap.min.css";
-import GlobalHeader, { LoginInfoProps } from "./components/GlobalHeader.vue";
+import GlobalHeader from "./components/GlobalHeader.vue";
+// import LoginInfoProps from "./store/index";
 import { useStore } from "vuex";
 
 export default defineComponent({
