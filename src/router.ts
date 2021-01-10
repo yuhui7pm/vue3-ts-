@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from './views/Home.vue';
-import ColumnDetail from './views/ColumnDetail.vue';
 import Login from './views/Login.vue';
 import store from './store';
+import CreateArticle from './views/CreatePost.vue';
 import { axios } from './libs/http'
 import Signup from './views/Signup.vue';
+import ColumnDetail from './views/ColumnDetail.vue';
 
 const historyRouter = createWebHistory();
 const router = createRouter({
@@ -25,11 +26,16 @@ const router = createRouter({
             redirectAlreadyLogin: true  // 路由元信息，帮助路由拦截
         }
     }, {
-      path: '/signup',
-      name: 'signup',
-      component: Signup,
-      meta: { redirectAlreadyLogin: true }
-    },]
+        path: '/signup',
+        name: 'signup',
+        component: Signup,
+        meta: { redirectAlreadyLogin: true }
+    }, {
+        path: '/create',
+        name: 'create',
+        component: CreateArticle,
+        meta: { requiredLogin: true }
+    }]
 });
 
 // 路由前置守卫

@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, onMounted } from "vue";
 import ColumnList from "../components/ColumnList.vue";
 import { GlobalDataProps } from "../store/types";
 import { useStore } from "vuex";
@@ -28,8 +28,17 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<GlobalDataProps>();
+    const currentPage = computed(() => store.state.columns.currentPage);
+
+    onMounted(() => {
+      store.dispatch("fetchColumns", {
+        pageSize: 6,
+        currentPage: currentPage.value ? currentPage.value + 1 : 2
+      });
+    });
+
     const list = computed(() => {
-      return store.state.columns;
+      return store.getters.getColumns;
     });
 
     return {

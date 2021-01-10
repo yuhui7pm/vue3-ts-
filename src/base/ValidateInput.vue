@@ -1,13 +1,29 @@
 <template>
   <div class="validate-input-container">
     <input
-      type="text"
+      v-if="tag==='input'"
       class="form-control"
       :class="{ 'is-invalid': inputRef.error }"
       v-model="inputRef.value"
       @blur="validateInput"
       v-bind="$attrs"
     />
+    <textarea
+      v-else
+      class="form-control"
+      :class="{ 'is-invalid': inputRef.error }"
+      v-model="inputRef.value"
+      @blur="validateInput"
+      v-bind="$attrs"
+    />
+    <!-- <component
+      :is="tag"
+      class="form-control"
+      :class="{ 'is-invalid': inputRef.error }"
+      v-model="inputRef.value"
+      @blur="validateInput"
+      v-bind="$attrs"
+    />-->
     <p v-if="inputRef.error" class="invalid-feedback">{{inputRef.message}}</p>
   </div>
 </template>
@@ -23,12 +39,17 @@ export interface RulesProps {
   message: string;
   validator?: () => boolean;
 }
+export type TagType = "input" | "textarea";
 
 export default defineComponent({
   name: "ValidateInput",
   props: {
     rules: Array as PropType<RulesProps[]>,
-    modelValue: String
+    modelValue: String,
+    tag: {
+      type: String as PropType<TagType>,
+      default: "input"
+    }
   },
   // 禁止 attribute 继承。然后直接在input里面写v-bind:attrs
   inheritAttrs: false,

@@ -13,6 +13,8 @@ export interface ImageProps {
   url?: string;
   fitUrl?: string;
   createdAt?: string;
+  extname?: string;
+  filename?: string;
 }
 
 export interface ColumnProps {
@@ -20,6 +22,11 @@ export interface ColumnProps {
   title: string;
   avatar?: ImageProps;
   description: string;
+  createdAt?: string;
+  __v?: number;
+  featured?: boolean;
+  author?: string;
+  key?: number;
 }
 
 export interface PostProps {
@@ -32,19 +39,35 @@ export interface PostProps {
   author?: string | UserProps;
   createdAt?: string;
   isHTML?: boolean;
+  avatar?: ImageProps;
+  description?: string;
 }
 
 interface ListProps<p> {
   [id: string]: p
 }
 
+export interface LoadedPostProps {
+  columnId?: string;
+  currentPage?: number;
+  total?: number;
+}
+
 export interface GlobalDataProps {
-  columns: ColumnProps[];
-  posts: PostProps[];
+  columns: {
+    data: ListProps<ColumnProps>;
+    currentPage: number;
+    total: number;
+  };
+  // posts: PostProps[];
   user: UserProps,
   loading: boolean,
   error: GlobalErrorProps,
-  token: string
+  token: string,
+  posts: {  // 主要是为了作缓存，避免跳转到同一个页面重复发请求
+    data: ListProps<PostProps>;
+    loadedColumns: ListProps<LoadedPostProps>;
+  }
 }
 
 export interface PostProps {
@@ -76,3 +99,10 @@ export interface LoginInfoProps {
 export interface tokenType {
   token: string
 }
+
+export interface ResponseType<P = {}> {
+  code: number,
+  message: string,
+  data: P
+} 
+

@@ -19,10 +19,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import PostList from "../components/PostList.vue";
+type ColumnIdProps = string | undefined;
 
 export default defineComponent({
   name: "ColumnDetail",
@@ -32,13 +33,22 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const route = useRoute();
+    const currentId = route.params.id as ColumnIdProps;
+
     const columnId = route.params.id;
+    onMounted(() => {
+      store.dispatch("fetchColumn", currentId);
+      store.dispatch("fetchPosts", { columnId: currentId, pageSize: 3 });
+    });
+
     const column = computed(() => {
       return store.getters.getColumnById(columnId);
     });
+
     const postList = computed(() => {
       return store.getters.getPostsByCid(columnId);
     });
+
     return {
       column,
       postList

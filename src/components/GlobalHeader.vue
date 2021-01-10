@@ -1,13 +1,15 @@
 <template>
   <nav class="navbar navbar-dark bg-primary mb-4">
-    <a href="#" class="w-75 navbar mx-auto fs-4 text-light">知乎专栏</a>
+    <router-link to="/" class="w-75 navbar mx-auto fs-4 text-light">知乎专栏</router-link>
     <form class="d-flex list-inline mb-0 mx-auto">
       <div v-if="!loginInfo.isLogin">
         <router-link to="/login" class="btn btn-outline-light my-2 me-2" type="submit">登陆</router-link>
         <router-link to="/signup" class="btn btn-outline-light my-2">注册</router-link>
       </div>
       <drop-down v-else :admin="'你好!' + (loginInfo.nickName || '作者')">
-        <drop-down-item>新建文章</drop-down-item>
+        <drop-down-item>
+          <router-link to="/create">新建文章</router-link>
+        </drop-down-item>
         <drop-down-item disabled>我的专栏</drop-down-item>
         <drop-down-item disabled>编辑资料</drop-down-item>
         <drop-down-item>

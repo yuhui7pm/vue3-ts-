@@ -1,7 +1,8 @@
 import { createStore, Commit } from "vuex";
-import  {testColumns, testPosts, mockToken, mockLoginData } from './testData';
+import  {singleMockColumn, mockToken, mockLoginData, mockColumnRes, columnArticles } from './testData';
 import { GlobalDataProps, GlobalErrorProps } from './types'
 import { axios, AxiosRequestConfig } from '../libs/http'
+import { objToArr, arrToObj } from '../libs/helpers';
 import { StorageHandler, storageType } from '../libs/storage'
 const storageHandler = new StorageHandler();
 
@@ -19,8 +20,10 @@ const asyncAndCommit = async (url: string, mutationName: string, commit: Commit,
 
 const store = createStore<GlobalDataProps>({
     state: {
-        columns: testColumns,
-        posts: testPosts,
+        // columns: testColumns,
+        // posts: testPosts,
+        columns: { data: {}, currentPage: 0, total: 0 },
+        posts: { data: {}, loadedColumns: {} }, // 主要是为了作缓存，避免跳转到同一个页面重复发请求
         user: {
             isLogin: false,
             nickName: '啦啦啦'
@@ -32,13 +35,13 @@ const store = createStore<GlobalDataProps>({
 
     getters: {
         getColumns: (state) => {
-            return state.columns;
+            return objToArr(state.columns.data);
         },
         getColumnById: state => (id: number | string) => {
-            return state.columns[+id-1];
+            return state.columns.data[id];
         },
         getPostsByCid: state => (cid: number | string) => {
-            return state.posts.filter(item => (+item.column === +cid));
+            return objToArr(state.posts.data).filter(item => (item.column === cid));
         },
         getCurrentUser: (state) => {
             return state.user;
@@ -46,6 +49,31 @@ const store = createStore<GlobalDataProps>({
     },
 
     mutations: {
+        // 主要是为了作缓存，避免跳转到同一个页面重复发请求
+        createPost (state, newPost) {
+            state.posts.data[newPost._id] = newPost
+        },
+
+        // 主要是为了作缓存，避免跳转到同一个页面重复发请求
+        updatePost (state, { data }) {
+            state.posts.data[data._id] = data
+        },
+        // 第一次登陆，存储用户所在专栏信息，后面就不发请求了
+        fetchColumn (state, rawDataParam) {
+            const rawData = rawDataParam.code === 0 ?  rawDataParam : {
+                data: singleMockColumn
+            };
+            state.columns.data[rawData.data._id] = rawData.data
+        },
+        fetchColumns (state, rawData) {
+            const { data } = state.columns
+            const { list, count, currentPage } = rawData.data || mockColumnRes;
+            state.columns = {
+                data: { ...data, ...arrToObj(list) },
+                total: count,
+                currentPage: currentPage * 1
+            }
+        },
         setUserLoginStatus: (state, rawData) => {
             state.user = Object.assign({}, state.user ,rawData);
         },
@@ -76,9 +104,29 @@ const store = createStore<GlobalDataProps>({
         fetchCurrentUser (state, rawData) {
             state.user = { isLogin: true, ...(rawData.data || mockLoginData) }
         },
+
+        // 第一次登陆，获取用户所在专栏底下的博客简介数据，并保存起来，后面加载相同页面数据，直接读取即可，不用发请求
+        fetchPosts (state, { data: rawData, extraData: columnId }) {
+            const { data } = state.posts
+            const { list, count, currentPage } = rawData.data || columnArticles
+
+            // @ts-ignore  暂时禁用，这个有问题
+            state.posts.data = { ...data, ...arrToObj(list) }
+            state.posts.loadedColumns[columnId] = {
+                columnId: columnId,
+                total: count,
+                currentPage: currentPage * 1
+            }
+        },
     },
 
     actions: {
+        fetchColumns ({ state, commit }, params = {}) {
+            const { currentPage = 1, pageSize = 6 } = params
+            if (state.columns.currentPage < currentPage) {
+                return asyncAndCommit(`/api/columns?currentPage=${currentPage}&pageSize=${pageSize}`, 'fetchColumns', commit)
+            }
+        },
 
         // 登陆之后获取用户登录信息
         fetchCurrentUser ({ commit }) {
@@ -98,6 +146,32 @@ const store = createStore<GlobalDataProps>({
 
         login ({ commit }, loginParam) {
             return asyncAndCommit('/api/user/login', 'login', commit, { method: 'post', data: loginParam });
+        },
+
+        // 新建文章
+        createPost ({ commit }, data) {
+            return asyncAndCommit('/api/posts', 'createPost', commit, { method: 'post', data })
+        },
+
+        // 编辑文章
+        updatePost ({ commit }, { id, params: data }) {
+            return asyncAndCommit(`/api/posts/${id}`, 'updatePost', commit, {
+                method: 'patch',
+                data
+            })
+        },
+
+        // 第一次登陆，获取用户所在专栏信息，后面就不发请求了
+        fetchColumn ({ state, commit }, cid) {
+            if (!state.columns.data[cid]) {
+                return asyncAndCommit(`/api/columns/${cid}`, 'fetchColumn', commit)
+            }
+        },
+
+        // 第一次登陆，获取用户所在专栏底下的博客简介数据，后面就不发请求了
+        fetchPosts ({ commit }, params = {}) {
+            const { columnId, currentPage = 1, pageSize = 3 } = params
+            return asyncAndCommit(`/api/columns/${columnId}/posts?currentPage=${currentPage}&pageSize=${pageSize}`, 'fetchPosts', commit, { method: 'get' }, columnId)
         }
     }
 })
