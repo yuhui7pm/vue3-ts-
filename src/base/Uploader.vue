@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType } from "vue";
+import { defineComponent, ref, PropType, watch } from "vue";
 import { axios } from "../libs/http";
 import { mockUploadPicData } from "../store/testData";
 type UploadStatus = "ready" | "loading" | "success" | "error";
@@ -46,6 +46,17 @@ export default defineComponent({
     const fileInput = ref<HTMLInputElement | null>(null);
     const fileStatus = ref<UploadStatus>(props.uploaded ? "success" : "ready");
     const uploadedData = ref(props.uploaded);
+
+    // 用于编辑的时候，显示图片
+    watch(
+      () => props.uploaded,
+      newValue => {
+        if (newValue) {
+          fileStatus.value = "success";
+          uploadedData.value = newValue;
+        }
+      }
+    );
 
     const triggerUpload = () => {
       if (fileInput.value) {

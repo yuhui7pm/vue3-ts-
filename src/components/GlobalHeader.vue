@@ -8,12 +8,16 @@
       </div>
       <drop-down v-else :admin="'你好!' + (loginInfo.nickName || '作者')">
         <drop-down-item>
-          <router-link to="/create">新建文章</router-link>
+          <router-link to="/create" class="dropdown-item">新建文章</router-link>
         </drop-down-item>
-        <drop-down-item disabled>我的专栏</drop-down-item>
-        <drop-down-item disabled>编辑资料</drop-down-item>
         <drop-down-item>
-          <span href="#" @click.prevent="handleLogout">退出登录</span>
+          <router-link :to="`/column/${loginInfo.column}`" class="dropdown-item">我的专栏</router-link>
+        </drop-down-item>
+        <drop-down-item>
+          <a href="#" class="dropdown-item">编辑资料</a>
+        </drop-down-item>
+        <drop-down-item>
+          <span href="#" @click.prevent="handleLogout" class="dropdown-item">退出登录</span>
         </drop-down-item>
       </drop-down>
     </form>
@@ -46,7 +50,6 @@ export default {
     const router = useRouter();
 
     const handleLogout = () => {
-      console.log("handleLogout");
       store.commit("logout");
       router.push({ name: "home" });
     };

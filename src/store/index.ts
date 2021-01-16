@@ -1,5 +1,5 @@
 import { createStore, Commit } from "vuex";
-import  {singleMockColumn, mockToken, mockLoginData, mockColumnRes, columnArticles } from './testData';
+import  {singleMockColumn, mockToken, mockLoginData, mockColumnRes, columnArticles, mockArticleDetail } from './testData';
 import { GlobalDataProps, GlobalErrorProps } from './types'
 import { axios, AxiosRequestConfig } from '../libs/http'
 import { objToArr, arrToObj } from '../libs/helpers';
@@ -45,25 +45,30 @@ const store = createStore<GlobalDataProps>({
         },
         getCurrentUser: (state) => {
             return state.user;
+        },
+        getCurrentPost: (state) => (id: string) => {
+            return state.posts.data[id];
         }
     },
 
     mutations: {
         // 主要是为了作缓存，避免跳转到同一个页面重复发请求
         createPost (state, newPost) {
-            state.posts.data[newPost._id] = newPost
+            state.posts.data[newPost._id] = newPost;
         },
 
-        // 主要是为了作缓存，避免跳转到同一个页面重复发请求
+        // 主要是为了作缓存，避免跳转到同一个页面重复发请求。
+        // 如果不是线上环境，编辑详情提交的时候，会报错。
+        // 因为不是线上环境
         updatePost (state, { data }) {
-            state.posts.data[data._id] = data
+            state.posts.data[data._id] = data;
         },
         // 第一次登陆，存储用户所在专栏信息，后面就不发请求了
         fetchColumn (state, rawDataParam) {
             const rawData = rawDataParam.code === 0 ?  rawDataParam : {
                 data: singleMockColumn
             };
-            state.columns.data[rawData.data._id] = rawData.data
+            state.columns.data[rawData.data._id] = rawData.data;
         },
         fetchColumns (state, rawData) {
             const { data } = state.columns
@@ -118,6 +123,19 @@ const store = createStore<GlobalDataProps>({
                 currentPage: currentPage * 1
             }
         },
+
+        // 保存获取到的文章详情页
+        fetchPost (state, rawDataParam) {
+            const rawData = rawDataParam.data ? rawDataParam : mockArticleDetail;
+            if (rawData.data) {
+                state.posts.data[rawData.data._id] = rawData.data;
+            }
+        },
+
+        // 删除详情内容
+        deletePost (state, { data }) {
+            delete state.posts.data[data?._id || 0]
+        },
     },
 
     actions: {
@@ -138,7 +156,6 @@ const store = createStore<GlobalDataProps>({
         },
 
         loginAndFetch (params, loginParam) {
-            console.log(params);
             return params.dispatch('login', loginParam).then(() => {
                 params.dispatch('fetchCurrentUser')
             })
@@ -172,7 +189,23 @@ const store = createStore<GlobalDataProps>({
         fetchPosts ({ commit }, params = {}) {
             const { columnId, currentPage = 1, pageSize = 3 } = params
             return asyncAndCommit(`/api/columns/${columnId}/posts?currentPage=${currentPage}&pageSize=${pageSize}`, 'fetchPosts', commit, { method: 'get' }, columnId)
-        }
+        },
+
+        // 获取专栏中某一篇文章的详情
+        fetchPost ({state, commit}, id) {
+            const currentPost = state.posts.data[id];
+            if (!currentPost || !currentPost.content) {
+                return asyncAndCommit(`/api/posts/${id}`, 'fetchPost', commit);
+            } else {
+                return Promise.resolve({data: currentPost});
+            }
+        },
+
+        deletePost ({ commit }, id) {
+            return asyncAndCommit(`/api/posts/${id}`, 'deletePost', commit, {
+                method: 'delete'
+            })
+        },
     }
 })
 

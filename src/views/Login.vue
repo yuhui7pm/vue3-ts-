@@ -82,10 +82,6 @@ export default defineComponent({
           .catch(e => {
             console.log(e);
           });
-
-        // store.commit("setUserLoginStatus", {
-        //   isLogin: true
-        // });
       }
     };
 

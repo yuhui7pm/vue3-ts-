@@ -3,6 +3,7 @@
     <h4>{{ isEditMode ? '编辑' : '新增'}}文章</h4>
     <uploader
       action="/api/upload"
+      :uploaded="uploadedData"
       :before-upload="uploadCheck"
       @file-uploaded-success="onFileUploadedSuccess"
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
@@ -79,7 +80,7 @@
 
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 import ValidateForm from "../base/ValidateForm.vue";
@@ -118,6 +119,27 @@ export default defineComponent({
     const contentRules: RulesProps[] = [
       { type: "required", message: "文章详情不能为空" }
     ];
+    const uploadedData = ref();
+
+    // 编辑的时候，获取编辑的内容
+    // 有一个缺陷：刷新页面，编辑的数据会没有，懒得改了，有时间再改
+    onMounted(() => {
+      if (isEditMode) {
+        store
+          .dispatch("fetchPost", queryId)
+          .then((rawData: ResponseType<PostProps>) => {
+            const currentPost = rawData.data;
+            const { image, title, content } = currentPost;
+            titleVal.value = title;
+            contentVal.value = content || "";
+            if (image) {
+              uploadedData.value = {
+                data: image
+              };
+            }
+          });
+      }
+    });
 
     // 校验文件格式
     const uploadCheck = (file: File) => {
@@ -148,9 +170,7 @@ export default defineComponent({
       if (!res) {
         return;
       }
-
       const { column, _id } = store.state.user; // 用户ID和用户所属专栏，默认都会有的
-      console.log(column, _id);
       if (column) {
         const params: PostProps = {
           title: titleVal.value,
@@ -190,7 +210,8 @@ export default defineComponent({
       uploadCheck,
       onFormSubmit,
 
-      onFileUploadedSuccess
+      onFileUploadedSuccess,
+      uploadedData
     };
   }
 });

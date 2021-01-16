@@ -6,6 +6,7 @@ import CreateArticle from './views/CreatePost.vue';
 import { axios } from './libs/http'
 import Signup from './views/Signup.vue';
 import ColumnDetail from './views/ColumnDetail.vue';
+import PostDetail from './views/PostDetail.vue';
 
 const historyRouter = createWebHistory();
 const router = createRouter({
@@ -35,6 +36,10 @@ const router = createRouter({
         name: 'create',
         component: CreateArticle,
         meta: { requiredLogin: true }
+    }, {
+      path: '/posts/:id',
+      name: 'post',
+      component: PostDetail
     }]
 });
 

@@ -232,6 +232,10 @@ export const singleMockColumn: ColumnProps = {
     title: "16hyu@stu2.edu.cn的专栏",
     __v: 0,
     _id: "5ff9a0a79c7ab1263baba468",
+    avatar: {
+        "_id": "5f3e3a17c305b1070f455202",
+        "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5f3e3a17c305b1070f455202.jpg"
+    }
 }
 // 带有页码的专栏mock数据
 export const mockColumnRes = {
@@ -318,3 +322,27 @@ export const mockColumnRes = {
         "pageSize": 6,
         "currentPage": 1
     }
+
+export const mockArticleDetail = {
+    "code": 0,
+    "data": {
+        "_id": "6002e1509c7ab1263baba5e4",
+        "title": "测试markdown",
+        "content": "```\n这里是用markdown写的内容\n```",
+        "column": "5ff9a0a79c7ab1263baba468",
+        "author": {
+            "_id": "5ff9a0a79c7ab1263baba467",
+            "email": "16hyu@stu2.edu.cn",
+            "nickName": "16hyu@stu2.edu.cn"
+        },
+        "image": {
+            "_id": "6002e1399c7ab1263baba5e3",
+            "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/6002e1399c7ab1263baba5e3.jpg"
+        },
+        "excerpt": "这里是用markdown写的内容\n`",
+        "__v": 0,
+        "updatedAt": "2021-01-16T12:51:28.826Z",
+        "createdAt": "2021-01-16 20:51:28"
+    },
+    "msg": "请求成功"
+}
