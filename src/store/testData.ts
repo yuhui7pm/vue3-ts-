@@ -8,6 +8,10 @@ export const testColumns: ColumnProps[] = [
     title: "16hyu@stu2.edu.cn的专栏",
     __v: 0,
     _id: "5ff9a0a79c7ab1263baba468",
+    "avatar": {
+        "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/6003c7b89c7ab1263baba5ed.jpg",
+        "_id": "6003c7b89c7ab1263baba5ed"
+    },
   },
   {
       "createdAt": "2020-08-20 22:21:10",
@@ -248,6 +252,10 @@ export const mockColumnRes = {
                 title: "16hyu@stu2.edu.cn的专栏",
                 __v: 0,
                 _id: "5ff9a0a79c7ab1263baba468",
+                avatar: {
+                    "_id": "5f3e3a17c305b1070f455202",
+                    "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/6003c7b89c7ab1263baba5ed.jpg"
+                }
             },
             {
                 "createdAt": "2020-08-20 22:21:10",

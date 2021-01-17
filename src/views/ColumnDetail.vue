@@ -14,15 +14,32 @@
       </div>
     </div>
     <post-list :list="postList"></post-list>
-    <button class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25 load-more">加载更多</button>
+    <button
+      v-if="!isLastPage"
+      @click="loadMorePage"
+      class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25 load-more"
+    >加载更多</button>
   </div>
 </template>
 
+
+<style scoped>
+.w-690 {
+  width: 690px;
+  margin: 0 auto;
+}
+.load-more {
+  margin-left: 50% !important;
+  transform: translate3d(-50%, 0, 0);
+}
+</style>
+
 <script lang="ts">
-import { defineComponent, computed, onMounted } from "vue";
+import { defineComponent, computed, onMounted, reactive, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import PostList from "../components/PostList.vue";
+import useLoadMore from "../hooks/useLoadMore";
 type ColumnIdProps = string | undefined;
 
 export default defineComponent({
@@ -33,9 +50,21 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const route = useRoute();
+    const loaded = reactive({
+      currentPage: 0,
+      total: 0
+    });
+    const total = computed(() => loaded.total);
     const currentId = route.params.id as ColumnIdProps;
 
     const columnId = route.params.id;
+
+    watch(store.state.posts.loadedColumns, () => {
+      const { currentPage, total } = store.getters.getLoadedPost(currentId);
+      loaded.currentPage = currentPage;
+      loaded.total = total;
+    });
+
     onMounted(() => {
       store.dispatch("fetchColumn", currentId);
       store.dispatch("fetchPosts", { columnId: currentId, pageSize: 3 });
@@ -49,21 +78,24 @@ export default defineComponent({
       return store.getters.getPostsByCid(columnId);
     });
 
+    const params = {
+      columnId: currentId,
+      pageSize: 6,
+      currentPage: loaded.currentPage ? loaded.currentPage + 1 : 2
+    };
+
+    const { loadMorePage, isLastPage } = useLoadMore(
+      "fetchPosts",
+      total,
+      params
+    );
+
     return {
       column,
-      postList
+      postList,
+      loadMorePage,
+      isLastPage
     };
   }
 });
 </script>
-
-<style scoped>
-.w-690 {
-  width: 690px;
-  margin: 0 auto;
-}
-.load-more {
-  margin-left: 50% !important;
-  transform: translate3d(-50%, 0, 0);
-}
-</style>

@@ -48,6 +48,10 @@ const store = createStore<GlobalDataProps>({
         },
         getCurrentPost: (state) => (id: string) => {
             return state.posts.data[id];
+        },
+         // 根据columnId 获得已加载的记录
+        getLoadedPost: (state) => (id: string) => {
+            return state.posts.loadedColumns[id]
         }
     },
 

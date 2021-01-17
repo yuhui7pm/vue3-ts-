@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-dark bg-primary mb-4">
-    <router-link to="/" class="w-75 navbar mx-auto fs-4 text-light">知乎专栏</router-link>
+    <router-link to="/" class="w-75 navbar mx-auto fs-4 text-light">哲也专栏</router-link>
     <form class="d-flex list-inline mb-0 mx-auto">
       <div v-if="!loginInfo.isLogin">
         <router-link to="/login" class="btn btn-outline-light my-2 me-2" type="submit">登陆</router-link>
@@ -13,8 +13,8 @@
         <drop-down-item>
           <router-link :to="`/column/${loginInfo.column}`" class="dropdown-item">我的专栏</router-link>
         </drop-down-item>
-        <drop-down-item>
-          <a href="#" class="dropdown-item">编辑资料</a>
+        <drop-down-item disabled>
+          <a href="#" class="dropdown-item">编辑资料(未实现)</a>
         </drop-down-item>
         <drop-down-item>
           <span href="#" @click.prevent="handleLogout" class="dropdown-item">退出登录</span>

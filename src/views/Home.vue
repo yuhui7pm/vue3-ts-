@@ -12,6 +12,11 @@
       </div>
     </section>
     <column-list :list="list" />
+    <button
+      v-if="!isLastPage"
+      @click="loadMorePage"
+      class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25 load-more"
+    >加载更多</button>
   </div>
 </template>
 
@@ -20,6 +25,7 @@ import { defineComponent, computed, onMounted } from "vue";
 import ColumnList from "../components/ColumnList.vue";
 import { GlobalDataProps } from "../store/types";
 import { useStore } from "vuex";
+import useLoadMore from "../hooks/useLoadMore";
 
 export default defineComponent({
   name: "Home",
@@ -29,6 +35,7 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>();
     const currentPage = computed(() => store.state.columns.currentPage);
+    const total = computed(() => store.state.columns.total);
 
     onMounted(() => {
       store.dispatch("fetchColumns", {
@@ -37,12 +44,19 @@ export default defineComponent({
       });
     });
 
+    const { loadMorePage, isLastPage } = useLoadMore("fetchColumns", total, {
+      pageSize: 6,
+      currentPage: currentPage.value ? currentPage.value + 1 : 2
+    });
+
     const list = computed(() => {
       return store.getters.getColumns;
     });
 
     return {
-      list
+      list,
+      loadMorePage,
+      isLastPage
     };
   }
 });
