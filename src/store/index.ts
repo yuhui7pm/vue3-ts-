@@ -1,5 +1,5 @@
 import { createStore, Commit } from "vuex";
-import  {singleMockColumn, mockToken, mockLoginData, mockColumnRes, columnArticles, mockArticleDetail } from './testData';
+import { singleMockColumn, mockToken, mockLoginData, mockColumnRes, columnArticles, mockArticleDetail } from './testData';
 import { GlobalDataProps, GlobalErrorProps } from './types'
 import { axios, AxiosRequestConfig } from '../libs/http'
 import { objToArr, arrToObj } from '../libs/helpers';

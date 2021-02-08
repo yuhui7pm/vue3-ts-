@@ -16,14 +16,6 @@
       @blur="validateInput"
       v-bind="$attrs"
     />
-    <!-- <component
-      :is="tag"
-      class="form-control"
-      :class="{ 'is-invalid': inputRef.error }"
-      v-model="inputRef.value"
-      @blur="validateInput"
-      v-bind="$attrs"
-    />-->
     <p v-if="inputRef.error" class="invalid-feedback">{{inputRef.message}}</p>
   </div>
 </template>

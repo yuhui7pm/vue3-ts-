@@ -9,7 +9,7 @@ const createMsg = (message: string, type: string, timeout = 2000) =>{
 
     // 挂载节点
     const div = document.createElement('div');
-    div.id="message";
+    div.id = "message";
     document.body.appendChild(div);
     messageInstance.mount(div);
 

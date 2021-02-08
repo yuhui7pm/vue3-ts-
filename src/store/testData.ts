@@ -1,4 +1,4 @@
-import { ColumnProps, PostProps, tokenType, UserProps, ResponseType, ImageProps } from './types';
+import { ColumnProps, tokenType, UserProps, ResponseType, ImageProps } from './types';
 
 export const testColumns: ColumnProps[] = [
   {
@@ -107,6 +107,7 @@ export const columnArticles = {
             {
                 "createdAt": "2021-01-10 15:00:45",
                 "excerpt": "test8",
+                "content": "```\n这里是文本内容，啦啦啦啦\n```",
                 "image": {
                     "_id": "5ffaa6179c7ab1263baba47f",
                     "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ffaa6179c7ab1263baba47f.jpg"
@@ -119,6 +120,7 @@ export const columnArticles = {
             {
                 "createdAt": "2021-01-10 15:00:30",
                 "excerpt": "test7",
+                "content": "```\n这里是文本内容，啦啦啦啦\n```",
                 "image": {
                     "_id": "5ffaa6079c7ab1263baba47d",
                     "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ffaa6079c7ab1263baba47d.jpg"
@@ -131,6 +133,7 @@ export const columnArticles = {
             {
                 "createdAt": "2021-01-10 15:00:14",
                 "excerpt": "ceshi6",
+                "content": "```\n这里是文本内容，啦啦啦啦\n```",
                 "image": {
                     "_id": "5ffaa5f69c7ab1263baba47b",
                     "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ffaa5f69c7ab1263baba47b.jpg"
@@ -143,6 +146,7 @@ export const columnArticles = {
             {
                 "createdAt": "2021-01-10 14:59:57",
                 "excerpt": "测试5",
+                "content": "```\n这里是文本内容，啦啦啦啦\n```",
                 "image": {
                     "_id": "5ffaa5e49c7ab1263baba479",
                     "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ffaa5e49c7ab1263baba479.jpg"
@@ -155,6 +159,7 @@ export const columnArticles = {
             {
                 "createdAt": "2021-01-10 14:59:35",
                 "excerpt": "测试4",
+                "content": "```\n这里是文本内容，啦啦啦啦\n```",
                 "image": {
                     "_id": "5ffaa5cf9c7ab1263baba477",
                     "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ffaa5cf9c7ab1263baba477.jpg"
@@ -167,6 +172,7 @@ export const columnArticles = {
             {
                 "createdAt": "2021-01-10 14:59:19",
                 "excerpt": "测试3",
+                "content": "```\n这里是文本内容，啦啦啦啦\n```",
                 "image": {
                     "_id": "5ffaa5c69c7ab1263baba475",
                     "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ffaa5c69c7ab1263baba475.jpg"
@@ -179,6 +185,7 @@ export const columnArticles = {
             {
                 "createdAt": "2021-01-10 14:58:01",
                 "excerpt": "测试2",
+                "content": "```\n这里是文本内容，啦啦啦啦\n```",
                 "image": {
                     "_id": "5ffaa5739c7ab1263baba473",
                     "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ffaa5739c7ab1263baba473.jpg"
@@ -191,6 +198,7 @@ export const columnArticles = {
             {
                 "createdAt": "2021-01-10 14:57:40",
                 "excerpt": "内容",
+                "content": "```\n这里是文本内容，啦啦啦啦\n```",
                 "image": {
                     "_id": "5ffaa5629c7ab1263baba471",
                     "url": "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ffaa5629c7ab1263baba471.jpg"
@@ -336,7 +344,7 @@ export const mockArticleDetail = {
     "data": {
         "_id": "6002e1509c7ab1263baba5e4",
         "title": "测试markdown",
-        "content": "```\n这里是用markdown写的内容\n```",
+        "content": "```\n这里是用markdown写的内容,lalalalalala\n```",
         "column": "5ff9a0a79c7ab1263baba468",
         "author": {
             "_id": "5ff9a0a79c7ab1263baba467",
